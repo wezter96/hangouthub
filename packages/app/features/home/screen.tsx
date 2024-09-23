@@ -10,17 +10,32 @@ import {
   SwitchRouterButton,
   XStack,
   YStack,
+  H2,
 } from '@my/ui'
 import { ChevronDown, ChevronUp, X } from '@tamagui/lucide-icons'
 import { useState } from 'react'
 import { Platform } from 'react-native'
 import { useLink } from 'solito/navigation'
-
+import { elysia } from 'hangouthub-elysia'
+import { useQuery } from '@tanstack/react-query'
 export function HomeScreen({ pagesMode = false }: { pagesMode?: boolean }) {
   const linkTarget = pagesMode ? '/pages-example-user' : '/user'
   const linkProps = useLink({
     href: `${linkTarget}/nate`,
   })
+  const { data } = useQuery({
+    queryKey: ['message'],
+    queryFn: () => elysia.api.message.index.get(),
+  })
+  const { data: data2 } = useQuery({
+    queryKey: ['message'],
+    queryFn: () => elysia.api.id({ id: 123 }).get(),
+  })
+
+  console.log('data: ', data)
+  console.log('data2:', data2)
+  // const { data, error } = await elysia.api.message.index.get()
+  // const { data: data2 } = await elysia.api.id({ id: 123 }).get()
 
   return (
     <YStack f={1} jc="center" ai="center" gap="$8" p="$4" bg="$background">
@@ -45,6 +60,9 @@ export function HomeScreen({ pagesMode = false }: { pagesMode?: boolean }) {
         <H1 ta="center" col="$color12">
           Welcome to Tamagui.
         </H1>
+        <H2> Testing 123 </H2>
+        <H2> API data: {data?.data} </H2>
+        <H2> API data2: {data2?.data} </H2>
         <Paragraph col="$color10" ta="center">
           Here's a basic starter to show navigating from one screen to another.
         </Paragraph>
