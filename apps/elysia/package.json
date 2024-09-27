@@ -5,7 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --watch src/index.ts",
-    "start": "bun run src/index.ts"
+    "start": "bun run src/index.ts",
+    "migrate": "bunx prisma migrate dev --name init"
   },
   "dependencies": {
     "@elysiajs/eden": "1.1.3",

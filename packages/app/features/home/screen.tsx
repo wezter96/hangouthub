@@ -28,10 +28,14 @@ export function HomeScreen({ pagesMode = false }: { pagesMode?: boolean }) {
     queryFn: () => elysia.api.message.index.get(),
   })
   const { data: data2 } = useQuery({
-    queryKey: ['message'],
-    queryFn: () => elysia.api.id({ id: 123 }).get(),
+    queryKey: ['userById'],
+    queryFn: () => elysia.api.users({ id: 'dcbd770f-b3ed-4fa6-9f8f-6d367e149014' }).get(),
   })
 
+  const { data: data3 } = useQuery({
+    queryKey: ['userByEmail'],
+    queryFn: () => elysia.api.users.email({ email: 'test@test.se' }).get(),
+  })
   const { data: users, refetch: refetchUsers } = useQuery({
     queryKey: ['users'],
     queryFn: () => elysia.api.users.index.get(),
@@ -39,15 +43,17 @@ export function HomeScreen({ pagesMode = false }: { pagesMode?: boolean }) {
 
   const mutation = useMutation({
     mutationFn: () =>
-      elysia.api['sign-up'].post({ firstName: 'firstTestName', lastName: 'lastTestName' }),
+      elysia.api.users['sign-up'].post({
+        firstName: 'firstTestName',
+        lastName: 'lastTestName',
+        email: 'test@test.se',
+      }),
     onSuccess: () => refetchUsers(),
   })
 
   console.log('data: ', data)
   console.log('data2:', data2)
   console.log('users: ', users)
-  // const { data, error } = await elysia.api.message.index.get()
-  // const { data: data2 } = await elysia.api.id({ id: 123 }).get()
 
   return (
     <YStack f={1} jc="center" ai="center" gap="$8" p="$4" bg="$background">
@@ -73,8 +79,8 @@ export function HomeScreen({ pagesMode = false }: { pagesMode?: boolean }) {
           Welcome to HangoutHub.
         </H1>
         <H2> API data: {data?.data} </H2>
-        <H2> API data2: {data2?.data} </H2>
-        <H2> Users: {users?.data.map((user) => user.username).join(', ')} </H2>
+        <H2> UserById name: {data2?.data.firstName} </H2>
+        <H2> User names: {users?.data?.map((user) => user.firstName).join(', ')} </H2>
         <Button onPress={() => mutation.mutate()}>Sign up</Button>
         <Separator />
         <Separator />

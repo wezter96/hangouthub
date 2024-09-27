@@ -1,7 +1,8 @@
 import { Elysia, t } from 'elysia'
 import { swagger } from '@elysiajs/swagger'
-import { messagesController, usersController } from './controllers'
 import { PrismaClient } from '@prisma/client'
+import { userController } from './domain'
+import { messagesController } from './controllers'
 
 const db = new PrismaClient()
 
@@ -35,20 +36,7 @@ export const elysiaApp = new Elysia({ prefix: '/api' })
   //   })
   // )
   .use(messagesController)
-  .use(usersController)
-  .get(
-    '/id/:id',
-    ({ params: { id } }): number => {
-      const numericId = Number(id)
-      if (isNaN(numericId)) {
-        throw new Error('Invalid ID')
-      }
-      return numericId
-    },
-    {
-      response: idResponseType,
-    }
-  )
+  .use(userController)
   .post('/mirror', ({ body }): { id: number; name: string } => body, {
     body: mirrorResponseType,
     response: mirrorResponseType,
