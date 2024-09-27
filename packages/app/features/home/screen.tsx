@@ -17,7 +17,7 @@ import { useState } from 'react'
 import { Platform } from 'react-native'
 import { useLink } from 'solito/navigation'
 import { elysia } from 'hangouthub-elysia'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 export function HomeScreen({ pagesMode = false }: { pagesMode?: boolean }) {
   const linkTarget = pagesMode ? '/pages-example-user' : '/user'
   const linkProps = useLink({
@@ -32,8 +32,20 @@ export function HomeScreen({ pagesMode = false }: { pagesMode?: boolean }) {
     queryFn: () => elysia.api.id({ id: 123 }).get(),
   })
 
+  const { data: users, refetch: refetchUsers } = useQuery({
+    queryKey: ['users'],
+    queryFn: () => elysia.api.users.index.get(),
+  })
+
+  const mutation = useMutation({
+    mutationFn: () =>
+      elysia.api['sign-up'].post({ firstName: 'firstTestName', lastName: 'lastTestName' }),
+    onSuccess: () => refetchUsers(),
+  })
+
   console.log('data: ', data)
   console.log('data2:', data2)
+  console.log('users: ', users)
   // const { data, error } = await elysia.api.message.index.get()
   // const { data: data2 } = await elysia.api.id({ id: 123 }).get()
 
@@ -58,18 +70,13 @@ export function HomeScreen({ pagesMode = false }: { pagesMode?: boolean }) {
 
       <YStack gap="$4">
         <H1 ta="center" col="$color12">
-          Welcome to Tamagui.
+          Welcome to HangoutHub.
         </H1>
-        <H2> Testing 123 </H2>
         <H2> API data: {data?.data} </H2>
         <H2> API data2: {data2?.data} </H2>
-        <Paragraph col="$color10" ta="center">
-          Here's a basic starter to show navigating from one screen to another.
-        </Paragraph>
+        <H2> Users: {users?.data.map((user) => user.username).join(', ')} </H2>
+        <Button onPress={() => mutation.mutate()}>Sign up</Button>
         <Separator />
-        <Paragraph ta="center">
-          This screen uses the same code on Next.js and React Native.
-        </Paragraph>
         <Separator />
       </YStack>
 

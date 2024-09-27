@@ -3,6 +3,7 @@ module.exports = function (api) {
   return {
     presets: [['babel-preset-expo', { jsxRuntime: 'automatic' }]],
     plugins: [
+      '@babel/plugin-transform-class-static-block',
       [
         require.resolve('babel-plugin-module-resolver'),
         {

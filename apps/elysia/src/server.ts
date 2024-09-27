@@ -1,6 +1,9 @@
 import { Elysia, t } from 'elysia'
 import { swagger } from '@elysiajs/swagger'
-import { messageController } from './controllers/message'
+import { messagesController, usersController } from './controllers'
+import { PrismaClient } from '@prisma/client'
+
+const db = new PrismaClient()
 
 // Define response types
 const rootResponseType = t.String()
@@ -31,7 +34,8 @@ export const elysiaApp = new Elysia({ prefix: '/api' })
   //     },
   //   })
   // )
-  .use(messageController)
+  .use(messagesController)
+  .use(usersController)
   .get(
     '/id/:id',
     ({ params: { id } }): number => {

@@ -6,7 +6,7 @@ const postMessageResponseType = t.Object({
   name: t.String(),
 })
 
-export const messageController = new Elysia({ prefix: '/message' })
+export const messagesController = new Elysia({ prefix: '/message' })
   .get('/', (): string => 'Hello From Elysia 🦊', {
     response: getMessageResponseType,
   })
