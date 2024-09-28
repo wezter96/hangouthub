@@ -8,6 +8,8 @@
     "start": "next start",
     "serve": "NODE_ENV=production next start --port 8151",
     "lint": "next lint",
+    "check:type": "tsc --noEmit",
+    "check:type:watch": "yarn check:type -w",
     "test": "vitest"
   },
   "dependencies": {

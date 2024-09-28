@@ -9,5 +9,5 @@ import { treaty } from '@elysiajs/eden'
 //     },
 //   })
 
-const url = process.env.URL_DOMAIN ?? 'localhost:3000'
+const url = process.env.URL_DOMAIN ?? 'localhost:8080'
 export const api = treaty<TElysiaApp>(url)

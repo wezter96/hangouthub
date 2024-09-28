@@ -8,7 +8,9 @@
   ],
   "compilerOptions": {
     "composite": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "resolveJsonModule": true,
+    "module": "ESNext"
   },
   "references": []
 }

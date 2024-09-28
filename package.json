@@ -6,7 +6,11 @@
     "./packages/*"
   ],
   "scripts": {
+    "_with-env": "dotenv -e .env -c --",
     "native": "cd apps/expo && yarn start",
+    "ios": "cd apps/expo && yarn ios",
+    "android": "cd apps/expo && yarn android",
+    "api": "cd apps/elysia && yarn dev",
     "watch": "yarn workspaces foreach -pi run watch",
     "vercel:install": "yarn set version 3.5 && yarn install",
     "web": "yarn build && cd apps/next && yarn next",
@@ -14,11 +18,19 @@
     "web:prod": "yarn workspace next-app build",
     "web:prod:serve": "yarn workspace next-app serve",
     "fix": "manypkg fix",
-    "postinstall": "yarn check-deps && yarn build",
+    "audit": "yarn npm audit",
+    "typecheck": "turbo check:type",
+    "check:type": "tsc -b --preserveWatchOutput tsconfig.json",
+    "check:type:watch": "yarn check:type -w",
+    "lint": "turbo lint",
+    "lint:fix": "turbo lint:fix",
+    "postinstall": "husky",
     "build": "yarn workspaces foreach --all --exclude next-app run build",
     "upgrade:tamagui": "yarn up '*tamagui*'@latest '@tamagui/*'@latest react-native-web-lite@latest",
     "upgrade:tamagui:canary": "yarn up '*tamagui*'@canary '@tamagui/*'@canary react-native-web-lite@canary",
     "check-deps": "check-dependency-version-consistency .",
+    "check-circular-deps": "yarn turbo check-circular-deps",
+    "prepare": "husky",
     "test": "vitest"
   },
   "resolutions": {
@@ -32,19 +44,21 @@
     "@babel/runtime": "^7.24.6",
     "@manypkg/cli": "^0.21.4",
     "check-dependency-version-consistency": "^4.1.0",
+    "dotenv": "^16.4.5",
+    "dotenv-cli": "^7.4.2",
     "elysia": "latest",
-    "eslint": "^9.3.0",
     "node-gyp": "^10.1.0",
     "prettier": "^3.3.3",
-    "turbo": "^1.13.4",
-    "typescript": "^5.6.2"
+    "turbo": "^1.13.4"
   },
-  "packageManager": "yarn@4.5.0",
   "engines": {
     "node": "22",
     "npm": "10.8"
   },
+  "packageManager": "yarn@4.5.0",
   "devDependencies": {
+    "husky": "^9.1.6",
+    "typescript": "^5.6.2",
     "vitest": "^2.1.1"
   }
 }

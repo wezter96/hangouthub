@@ -1,2 +1,1 @@
-export { api } from './client'
-export { elysiaApp } from './server'
+export { elysiaApp, type TElysiaApp } from './server';

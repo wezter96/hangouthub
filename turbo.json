@@ -10,6 +10,17 @@
     "dev": {
       "cache": false,
       "persistent": true
-    }
+    },
+    "lint": {
+      "cache": false
+    },
+    "check:type": {
+      "cache": false
+    },
+    "lint:fix": {},
+    "clean": {
+      "cache": false
+    },
+    "check-circular-deps": {}
   }
 }
