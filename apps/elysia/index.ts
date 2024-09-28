@@ -1,1 +1,1 @@
-export { elysia, elysiaApp } from './src';
+export { api, elysiaApp } from './src';

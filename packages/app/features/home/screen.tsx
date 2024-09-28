@@ -16,7 +16,7 @@ import { ChevronDown, ChevronUp, X } from '@tamagui/lucide-icons'
 import { useState } from 'react'
 import { Platform } from 'react-native'
 import { useLink } from 'solito/navigation'
-import { elysia } from 'hangouthub-elysia'
+import { api } from 'hangouthub-elysia'
 import { useMutation, useQuery } from '@tanstack/react-query'
 export function HomeScreen({ pagesMode = false }: { pagesMode?: boolean }) {
   const linkTarget = pagesMode ? '/pages-example-user' : '/user'
@@ -25,25 +25,25 @@ export function HomeScreen({ pagesMode = false }: { pagesMode?: boolean }) {
   })
   const { data } = useQuery({
     queryKey: ['message'],
-    queryFn: () => elysia.api.message.index.get(),
+    queryFn: () => api.message.index.get(),
   })
   const { data: data2 } = useQuery({
     queryKey: ['userById'],
-    queryFn: () => elysia.api.users({ id: 'dcbd770f-b3ed-4fa6-9f8f-6d367e149014' }).get(),
+    queryFn: () => api.users({ id: 'dcbd770f-b3ed-4fa6-9f8f-6d367e149014' }).get(),
   })
 
   const { data: data3 } = useQuery({
     queryKey: ['userByEmail'],
-    queryFn: () => elysia.api.users.email({ email: 'test@test.se' }).get(),
+    queryFn: () => api.users.email({ email: 'test@test.se' }).get(),
   })
   const { data: users, refetch: refetchUsers } = useQuery({
     queryKey: ['users'],
-    queryFn: () => elysia.api.users.index.get(),
+    queryFn: () => api.users.index.get(),
   })
 
   const mutation = useMutation({
     mutationFn: () =>
-      elysia.api.users['sign-up'].post({
+      api.users['sign-up'].post({
         firstName: 'firstTestName',
         lastName: 'lastTestName',
         email: 'test@test.se',

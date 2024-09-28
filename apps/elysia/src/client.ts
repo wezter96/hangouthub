@@ -1,5 +1,5 @@
 import type { TElysiaApp } from './server'
-import { treaty } from '@elysiajs/eden';
+import { treaty } from '@elysiajs/eden'
 
 // If you are not using Next.js v15^, you may want to set revalidate value to 0 due to default caching mechanics.
 
@@ -9,5 +9,5 @@ import { treaty } from '@elysiajs/eden';
 //     },
 //   })
 
-const url = process.env.URL_DOMAIN ?? 'localhost:3000';
-export const elysia = treaty<TElysiaApp>(url);
+const url = process.env.URL_DOMAIN ?? 'localhost:3000'
+export const api = treaty<TElysiaApp>(url)
