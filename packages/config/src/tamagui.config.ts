@@ -1,10 +1,10 @@
-import { createTamagui } from 'tamagui'
-import { createInterFont } from '@tamagui/font-inter'
-import { shorthands } from '@tamagui/shorthands'
-import { tokens, themes } from '@tamagui/config/v3'
-import { createMedia } from '@tamagui/react-native-media-driver'
+import { createTamagui } from 'tamagui';
+import { createInterFont } from '@tamagui/font-inter';
+import { shorthands } from '@tamagui/shorthands';
+import { tokens, themes } from '@tamagui/config/v3';
+import { createMedia } from '@tamagui/react-native-media-driver';
 
-import { animations } from '@my/ui/src/animations'
+import { animations } from '@my/ui/src/animations';
 
 const headingFont = createInterFont({
   size: {
@@ -36,7 +36,7 @@ const headingFont = createInterFont({
   face: {
     700: { normal: 'InterBold' },
   },
-})
+});
 
 const bodyFont = createInterFont(
   {
@@ -45,10 +45,10 @@ const bodyFont = createInterFont(
     },
   },
   {
-    sizeSize: (size) => Math.round(size * 1.1),
-    sizeLineHeight: (size) => Math.round(size * 1.1 + (size > 20 ? 10 : 10)),
-  }
-)
+    sizeSize: size => Math.round(size * 1.1),
+    sizeLineHeight: size => Math.round(size * 1.1 + (size > 20 ? 10 : 10)),
+  },
+);
 
 export const config = createTamagui({
   defaultFont: 'body',
@@ -87,7 +87,7 @@ export const config = createTamagui({
     hoverNone: { hover: 'none' },
     pointerCoarse: { pointer: 'coarse' },
   }),
-})
+});
 
 // for the compiler to find it
-export default config
+export default config;
