@@ -13,7 +13,9 @@
   ],
   "scripts": {
     "build": "tamagui-build --skip-types",
-    "watch": "tamagui-build --skip-types --watch"
+    "watch": "tamagui-build --skip-types --watch",
+    "lint": "yarn biome lint",
+    "lint:fix": "yarn biome fix"
   },
   "dependencies": {
     "@tamagui/animations-react-native": "^1.112.4",

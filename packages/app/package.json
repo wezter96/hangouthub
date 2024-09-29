@@ -7,8 +7,8 @@
     "*.css"
   ],
   "scripts": {
-    "lint": "",
-    "lint:fix": "",
+    "lint": "yarn biome lint",
+    "lint:fix": "yarn biome fix",
     "check:type": "tsc --noEmit",
     "check:type:watch": "yarn check:type -w"
   },

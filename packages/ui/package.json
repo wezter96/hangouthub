@@ -14,7 +14,9 @@
   ],
   "scripts": {
     "build": "tamagui-build --skip-types",
-    "watch": "tamagui-build --skip-types --watch"
+    "watch": "tamagui-build --skip-types --watch",
+    "lint": "yarn biome lint",
+    "lint:fix": "yarn biome fix"
   },
   "dependencies": {
     "@my/config": "0.0.1",

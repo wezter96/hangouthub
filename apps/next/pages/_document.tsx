@@ -1,22 +1,22 @@
-import { Children } from 'react'
-import { AppRegistry } from 'react-native'
+import { Children } from 'react';
+import { AppRegistry } from 'react-native';
 import NextDocument, {
-  DocumentContext,
-  DocumentInitialProps,
+  type DocumentContext,
+  type DocumentInitialProps,
   Head,
   Html,
   Main,
   NextScript,
-} from 'next/document'
-import { config } from '@my/ui'
+} from 'next/document';
+import { config } from '@my/ui';
 
 export default class Document extends NextDocument {
   static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps> {
-    AppRegistry.registerComponent('Main', () => Main)
-    const page = await ctx.renderPage()
+    AppRegistry.registerComponent('Main', () => Main);
+    const page = await ctx.renderPage();
 
     // @ts-ignore
-    const { getStyleElement } = AppRegistry.getApplication('Main')
+    const { getStyleElement } = AppRegistry.getApplication('Main');
 
     /**
      * Note: be sure to keep tamagui styles after react-native-web styles like it is here!
@@ -26,20 +26,22 @@ export default class Document extends NextDocument {
       getStyleElement(),
       <style
         key="tamagui-css"
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
         dangerouslySetInnerHTML={{
           __html: config.getCSS({
             exclude: process.env.NODE_ENV === 'development' ? null : 'design-system',
           }),
         }}
       />,
+      // biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
       <style jsx global>{`
         html {
           font-family: 'Inter';
         }
       `}</style>,
-    ]
+    ];
 
-    return { ...page, styles: Children.toArray(styles) }
+    return { ...page, styles: Children.toArray(styles) };
   }
 
   render() {
@@ -53,6 +55,6 @@ export default class Document extends NextDocument {
           <NextScript />
         </body>
       </Html>
-    )
+    );
   }
 }

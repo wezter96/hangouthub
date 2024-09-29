@@ -7,6 +7,8 @@
     "dev": "bun run --watch src/index.ts",
     "start": "bun run src/index.ts",
     "check:type": "tsc --noEmit",
+    "lint": "yarn biome lint",
+    "lint:fix": "yarn biome fix",
     "migrate": "bunx prisma migrate dev --name init"
   },
   "dependencies": {

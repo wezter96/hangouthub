@@ -43,6 +43,7 @@
   "dependencies": {
     "@babel/runtime": "^7.24.6",
     "@manypkg/cli": "^0.21.4",
+    "@tamagui/cli": "^1.112.4",
     "check-dependency-version-consistency": "^4.1.0",
     "dotenv": "^16.4.5",
     "dotenv-cli": "^7.4.2",
@@ -57,6 +58,7 @@
   },
   "packageManager": "yarn@4.5.0",
   "devDependencies": {
+    "@biomejs/biome": "1.9.2",
     "husky": "^9.1.6",
     "lefthook": "^1.7.17",
     "typescript": "^5.6.2",

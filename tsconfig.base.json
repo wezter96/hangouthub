@@ -19,7 +19,6 @@
     "preserveConstEnums": true,
     "strict": true,
     "noUncheckedIndexedAccess": true,
-    // DONT DO THIS so jsdoc will remain
     "removeComments": false,
     "skipLibCheck": true,
     "sourceMap": false,
@@ -29,7 +28,7 @@
     "lib": ["dom", "esnext"]
   },
   "paths": {
-    "react": ["./node_modules/@types/react"],
+    "react": ["./node_modules/@types/react"]
   },
   "exclude": ["_"],
   "typeAcquisition": {

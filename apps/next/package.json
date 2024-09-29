@@ -7,7 +7,8 @@
     "build": "cd ../.. && yarn build && cd apps/next && next build",
     "start": "next start",
     "serve": "NODE_ENV=production next start --port 8151",
-    "lint": "next lint",
+    "lint": "yarn biome lint",
+    "lint:fix": "yarn biome fix",
     "check:type": "tsc --noEmit",
     "check:type:watch": "yarn check:type -w",
     "test": "vitest"
