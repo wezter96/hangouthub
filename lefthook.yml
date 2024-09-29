@@ -17,9 +17,9 @@ pre-push:
     check-deps:
       tags: Check dependency version consistency 
       run: yarn check-deps
-    # lint:
-    #   tags: check code style
-    #   run: yarn lint
+    lint:
+      tags: check code style
+      run: yarn lint
     # test:
     #   tags: check tests
     #   run: yarn test
