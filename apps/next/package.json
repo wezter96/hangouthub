@@ -29,6 +29,7 @@
     "vercel": "latest"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.2",
     "@tamagui/next-plugin": "^1.112.4",
     "@types/node": "^20.14.1",
     "eslint-config-next": "^14.2.3",

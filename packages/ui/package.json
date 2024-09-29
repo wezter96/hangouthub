@@ -24,6 +24,7 @@
     "tamagui": "^1.112.4"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.2",
     "@tamagui/build": "^1.112.4"
   }
 }

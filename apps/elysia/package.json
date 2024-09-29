@@ -20,6 +20,7 @@
     "pg": "^8.13.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.2",
     "@types/pg": "^8.11.10",
     "bun-types": "latest",
     "prisma": "^5.20.0",
