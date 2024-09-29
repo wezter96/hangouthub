@@ -1,0 +1,5 @@
+yarn audit
+yarn typecheck
+yarn check-circular-deps
+yarn check-deps
+yarn lint
