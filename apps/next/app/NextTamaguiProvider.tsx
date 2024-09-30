@@ -1,16 +1,20 @@
-'use client';
+"use client";
 
-import '@tamagui/core/reset.css';
-import '@tamagui/font-inter/css/400.css';
-import '@tamagui/font-inter/css/700.css';
-import '@tamagui/polyfill-dev';
+import "@tamagui/core/reset.css";
+import "@tamagui/font-inter/css/400.css";
+import "@tamagui/font-inter/css/700.css";
+import "@tamagui/polyfill-dev";
 
-import type { ReactNode } from 'react';
-import { StyleSheet } from 'react-native';
-import { useServerInsertedHTML } from 'next/navigation';
-import { type ColorScheme, NextThemeProvider, useRootTheme } from '@tamagui/next-theme';
-import { config } from '@my/ui';
-import { Provider } from 'app/provider';
+import type { ReactNode } from "react";
+import { StyleSheet } from "react-native";
+import { useServerInsertedHTML } from "next/navigation";
+import {
+  type ColorScheme,
+  NextThemeProvider,
+  useRootTheme,
+} from "@tamagui/next-theme";
+import { config } from "@my/ui";
+import { Provider } from "app/provider";
 
 export const NextTamaguiProvider = ({ children }: { children: ReactNode }) => {
   const [theme, setTheme] = useRootTheme();
@@ -21,7 +25,10 @@ export const NextTamaguiProvider = ({ children }: { children: ReactNode }) => {
     return (
       <>
         {/* biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation> */}
-        <style dangerouslySetInnerHTML={{ __html: rnwStyle.textContent }} id={rnwStyle.id} />
+        <style
+          dangerouslySetInnerHTML={{ __html: rnwStyle.textContent }}
+          id={rnwStyle.id}
+        />
 
         <style
           // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
@@ -38,7 +45,8 @@ export const NextTamaguiProvider = ({ children }: { children: ReactNode }) => {
             __html: config.getCSS({
               // if you are using "outputCSS" option, you should use this "exclude"
               // if not, then you can leave the option out
-              exclude: process.env.NODE_ENV === 'production' ? 'design-system' : null,
+              exclude:
+                process.env.NODE_ENV === "production" ? "design-system" : null,
             }),
           }}
         />
@@ -53,7 +61,7 @@ export const NextTamaguiProvider = ({ children }: { children: ReactNode }) => {
 
         <style jsx global>{`
           html {
-            font-family: 'Inter';
+            font-family: "Inter";
           }
         `}</style>
       </>
@@ -64,10 +72,11 @@ export const NextTamaguiProvider = ({ children }: { children: ReactNode }) => {
     <NextThemeProvider
       skipNextHead
       // change default theme (system) here:
-      // defaultTheme="dark"
-      onChangeTheme={next => {
+      defaultTheme="light"
+      onChangeTheme={(next) => {
         setTheme(next as ColorScheme);
-      }}>
+      }}
+    >
       <Provider disableRootThemeClass defaultTheme={theme}>
         {children}
       </Provider>

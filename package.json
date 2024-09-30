@@ -28,6 +28,7 @@
     "build": "yarn workspaces foreach --all --exclude next-app run build",
     "upgrade:tamagui": "yarn up '*tamagui*'@latest '@tamagui/*'@latest react-native-web-lite@latest",
     "upgrade:tamagui:canary": "yarn up '*tamagui*'@canary '@tamagui/*'@canary react-native-web-lite@canary",
+    "generate-themes": "tamagui generate-themes ./packages/config/src/theme-builder.ts ./packages/config/src/themes.ts",
     "check-deps": "check-dependency-version-consistency .",
     "check-circular-deps": "yarn turbo check-circular-deps",
     "prepare": "husky",
@@ -43,6 +44,7 @@
   "dependencies": {
     "@babel/runtime": "^7.24.6",
     "@manypkg/cli": "^0.21.4",
+    "@shopify/flash-list": "^1.7.1",
     "@tamagui/cli": "^1.112.4",
     "check-dependency-version-consistency": "^4.1.0",
     "dotenv": "^16.4.5",
