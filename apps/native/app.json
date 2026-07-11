@@ -1,0 +1,17 @@
+{
+	"expo": {
+		"scheme": "hangouthub",
+		"userInterfaceStyle": "automatic",
+		"orientation": "default",
+		"web": {
+			"bundler": "metro"
+		},
+		"name": "HangoutHub",
+		"slug": "hangouthub",
+		"plugins": ["expo-font"],
+		"experiments": {
+			"typedRoutes": true,
+			"reactCompiler": true
+		}
+	}
+}

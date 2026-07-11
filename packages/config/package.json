@@ -1,32 +1,5 @@
 {
-  "name": "@my/config",
-  "version": "0.0.1",
-  "sideEffects": [
-    "*.css"
-  ],
-  "private": true,
-  "types": "./src",
-  "main": "src/index.ts",
-  "files": [
-    "types",
-    "dist"
-  ],
-  "scripts": {
-    "build": "tamagui-build --skip-types",
-    "watch": "tamagui-build --skip-types --watch",
-    "lint": "yarn biome lint",
-    "lint:fix": "yarn biome fix"
-  },
-  "dependencies": {
-    "@tamagui/animations-react-native": "^1.112.4",
-    "@tamagui/font-inter": "^1.112.4",
-    "@tamagui/react-native-media-driver": "^1.112.4",
-    "@tamagui/shorthands": "^1.112.4",
-    "@tamagui/themes": "^1.112.4",
-    "tamagui": "^1.112.4"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "1.9.2",
-    "@tamagui/build": "^1.112.4"
-  }
+	"name": "@hangouthub/config",
+	"version": "0.0.0",
+	"private": true
 }

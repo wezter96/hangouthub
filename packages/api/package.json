@@ -1,0 +1,31 @@
+{
+	"name": "@hangouthub/api",
+	"type": "module",
+	"exports": {
+		".": {
+			"default": "./src/index.ts"
+		},
+		"./*": {
+			"default": "./src/*.ts"
+		}
+	},
+	"scripts": {},
+	"dependencies": {
+		"@hangouthub/auth": "workspace:*",
+		"@hangouthub/db": "workspace:*",
+		"@hangouthub/env": "workspace:*",
+		"@orpc/client": "catalog:",
+		"@orpc/openapi": "catalog:",
+		"@orpc/server": "catalog:",
+		"@orpc/zod": "catalog:",
+		"@types/pg": "catalog:",
+		"dotenv": "catalog:",
+		"drizzle-orm": "catalog:",
+		"zod": "catalog:"
+	},
+	"devDependencies": {
+		"@hangouthub/config": "workspace:*",
+		"hono": "catalog:",
+		"typescript": "^6"
+	}
+}

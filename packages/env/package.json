@@ -1,0 +1,20 @@
+{
+	"name": "@hangouthub/env",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"exports": {
+		"./server": "./src/server.ts",
+		"./native": "./src/native.ts"
+	},
+	"dependencies": {
+		"@t3-oss/env-core": "^0.13.11",
+		"dotenv": "catalog:",
+		"zod": "catalog:"
+	},
+	"devDependencies": {
+		"@hangouthub/config": "workspace:*",
+		"@types/bun": "catalog:",
+		"typescript": "^6"
+	}
+}

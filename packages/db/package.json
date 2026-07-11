@@ -1,0 +1,36 @@
+{
+	"name": "@hangouthub/db",
+	"type": "module",
+	"exports": {
+		".": {
+			"default": "./src/index.ts"
+		},
+		"./*": {
+			"default": "./src/*.ts"
+		}
+	},
+	"scripts": {
+		"db:push": "drizzle-kit push",
+		"db:seed": "bun run src/seed.ts",
+		"db:generate": "drizzle-kit generate",
+		"db:studio": "drizzle-kit studio",
+		"db:migrate": "drizzle-kit migrate",
+		"db:start": "docker compose up -d",
+		"db:watch": "docker compose up",
+		"db:stop": "docker compose stop",
+		"db:down": "docker compose down"
+	},
+	"dependencies": {
+		"@hangouthub/env": "workspace:*",
+		"dotenv": "catalog:",
+		"drizzle-orm": "catalog:",
+		"pg": "^8.22.0",
+		"zod": "catalog:"
+	},
+	"devDependencies": {
+		"@hangouthub/config": "workspace:*",
+		"@types/pg": "catalog:",
+		"drizzle-kit": "^0.31.10",
+		"typescript": "^6"
+	}
+}
