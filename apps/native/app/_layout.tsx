@@ -27,6 +27,7 @@ function StackLayout() {
 		>
 			<Stack.Screen name="(drawer)" options={{ headerShown: false }} />
 			<Stack.Screen name="event/[id]" options={{ title: "Event" }} />
+			<Stack.Screen name="group/[id]" options={{ title: "Group" }} />
 			<Stack.Screen
 				name="modal"
 				options={{ title: "New event", presentation: "modal" }}

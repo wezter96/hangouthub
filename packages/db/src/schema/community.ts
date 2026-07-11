@@ -6,6 +6,7 @@ import {
 	serial,
 	text,
 	timestamp,
+	unique,
 } from "drizzle-orm/pg-core";
 
 import { user } from "./auth";
@@ -27,7 +28,7 @@ export const group = pgTable("group", {
 });
 
 /**
- * A scheduled meetup hosted by a group.
+ * A scheduled meetup hosted by a group and/or created by a user.
  */
 export const event = pgTable(
 	"event",
@@ -46,9 +47,15 @@ export const event = pgTable(
 		groupId: integer("group_id").references(() => group.id, {
 			onDelete: "set null",
 		}),
+		creatorId: text("creator_id").references(() => user.id, {
+			onDelete: "set null",
+		}),
 		createdAt: timestamp("created_at").defaultNow().notNull(),
 	},
-	(table) => [index("event_startsAt_idx").on(table.startsAt)],
+	(table) => [
+		index("event_startsAt_idx").on(table.startsAt),
+		index("event_creator_idx").on(table.creatorId),
+	],
 );
 
 /**
@@ -69,17 +76,45 @@ export const rsvp = pgTable(
 	(table) => [
 		index("rsvp_event_idx").on(table.eventId),
 		index("rsvp_user_idx").on(table.userId),
+		unique("rsvp_event_user_unique").on(table.eventId, table.userId),
+	],
+);
+
+/**
+ * A user's membership in a group.
+ */
+export const membership = pgTable(
+	"membership",
+	{
+		id: serial("id").primaryKey(),
+		groupId: integer("group_id")
+			.notNull()
+			.references(() => group.id, { onDelete: "cascade" }),
+		userId: text("user_id")
+			.notNull()
+			.references(() => user.id, { onDelete: "cascade" }),
+		createdAt: timestamp("created_at").defaultNow().notNull(),
+	},
+	(table) => [
+		index("membership_group_idx").on(table.groupId),
+		index("membership_user_idx").on(table.userId),
+		unique("membership_group_user_unique").on(table.groupId, table.userId),
 	],
 );
 
 export const groupRelations = relations(group, ({ many }) => ({
 	events: many(event),
+	memberships: many(membership),
 }));
 
 export const eventRelations = relations(event, ({ one, many }) => ({
 	group: one(group, {
 		fields: [event.groupId],
 		references: [group.id],
+	}),
+	creator: one(user, {
+		fields: [event.creatorId],
+		references: [user.id],
 	}),
 	rsvps: many(rsvp),
 }));
@@ -91,6 +126,17 @@ export const rsvpRelations = relations(rsvp, ({ one }) => ({
 	}),
 	user: one(user, {
 		fields: [rsvp.userId],
+		references: [user.id],
+	}),
+}));
+
+export const membershipRelations = relations(membership, ({ one }) => ({
+	group: one(group, {
+		fields: [membership.groupId],
+		references: [group.id],
+	}),
+	user: one(user, {
+		fields: [membership.userId],
 		references: [user.id],
 	}),
 }));

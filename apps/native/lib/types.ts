@@ -14,3 +14,8 @@ export type EventDetail = NonNullable<
 export type GroupItem = Awaited<
 	ReturnType<AppRouterClient["group"]["getAll"]>
 >[number];
+
+/** A group with its events + membership state, from the detail endpoint. */
+export type GroupDetail = NonNullable<
+	Awaited<ReturnType<AppRouterClient["group"]["getById"]>>
+>;

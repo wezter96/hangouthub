@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
-import { Spinner, useThemeColor } from "heroui-native";
+import { Input, Spinner, TextField, useThemeColor } from "heroui-native";
 import { useMemo, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 
@@ -11,25 +11,56 @@ import { orpc } from "@/utils/orpc";
 
 export default function DiscoverScreen() {
 	const [category, setCategory] = useState("All");
+	const [query, setQuery] = useState("");
 	const mutedColor = useThemeColor("muted");
 	const events = useQuery(orpc.event.getUpcoming.queryOptions());
 
 	const filtered = useMemo(() => {
-		const all = events.data ?? [];
-		return category === "All"
-			? all
-			: all.filter((event) => event.category === category);
-	}, [events.data, category]);
+		const needle = query.trim().toLowerCase();
+		return (events.data ?? []).filter((event) => {
+			if (category !== "All" && event.category !== category) return false;
+			if (!needle) return true;
+			return (
+				event.title.toLowerCase().includes(needle) ||
+				event.venue.toLowerCase().includes(needle) ||
+				event.city.toLowerCase().includes(needle) ||
+				event.description.toLowerCase().includes(needle)
+			);
+		});
+	}, [events.data, category, query]);
 
 	return (
 		<Container isScrollable={false}>
-			<View className="px-5 pt-3 pb-4">
+			<View className="px-5 pt-3 pb-3">
 				<Text className="font-extrabold text-3xl text-foreground">
 					Discover
 				</Text>
 				<Text className="mt-1 text-muted text-sm">
 					Find events happening near you
 				</Text>
+			</View>
+
+			{/* Search */}
+			<View className="px-5 pb-3">
+				<View className="flex-row items-center gap-2 rounded-2xl border border-border bg-surface px-3.5">
+					<Ionicons name="search" size={18} color={mutedColor} />
+					<View className="flex-1">
+						<TextField>
+							<Input
+								value={query}
+								onChangeText={setQuery}
+								placeholder="Search events, venues, cities…"
+								autoCapitalize="none"
+								returnKeyType="search"
+								style={{
+									borderWidth: 0,
+									backgroundColor: "transparent",
+									paddingHorizontal: 0,
+								}}
+							/>
+						</TextField>
+					</View>
+				</View>
 			</View>
 
 			<View className="pb-4">
@@ -48,12 +79,13 @@ export default function DiscoverScreen() {
 						Nothing here yet
 					</Text>
 					<Text className="mt-1 text-muted text-xs">
-						Try a different category
+						{query ? "Try a different search" : "Try a different category"}
 					</Text>
 				</View>
 			) : (
 				<ScrollView
 					showsVerticalScrollIndicator={false}
+					keyboardShouldPersistTaps="handled"
 					contentContainerStyle={{
 						paddingHorizontal: 20,
 						paddingBottom: 24,

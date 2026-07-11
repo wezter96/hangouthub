@@ -1,7 +1,9 @@
 import "./load-env";
 
+import { sql } from "drizzle-orm";
+
 import { db } from "./index";
-import { event, group, rsvp } from "./schema/community";
+import { event, group } from "./schema/community";
 
 /** Returns a Date `days` days (and optional `hour`) from now. */
 function daysFromNow(days: number, hour = 18): Date {
@@ -213,9 +215,11 @@ async function seed() {
 	console.log("🌱 Seeding HangoutHub…");
 
 	// Clean slate so the seed is idempotent.
-	await db.delete(rsvp);
-	await db.delete(event);
-	await db.delete(group);
+	// Reset all community tables and restart identity sequences so IDs are
+	// clean and predictable on every seed.
+	await db.execute(
+		sql`TRUNCATE TABLE rsvp, membership, event, "group" RESTART IDENTITY CASCADE`,
+	);
 
 	const insertedGroups = await db.insert(group).values(groups).returning();
 	const groupIdBySlug = new Map(insertedGroups.map((g) => [g.slug, g.id]));
