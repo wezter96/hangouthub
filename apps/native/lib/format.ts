@@ -78,6 +78,26 @@ export function formatCount(value: number): string {
 	return value.toString();
 }
 
+/** A Google Maps search URL for a venue. */
+export function mapsUrl(venue: string, city: string): string {
+	const query = encodeURIComponent(`${venue}, ${city}`);
+	return `https://www.google.com/maps/search/?api=1&query=${query}`;
+}
+
+/** Short "time ago" label, e.g. "just now", "3h", "2d". */
+export function timeAgo(input: Date | string): string {
+	const date = toDate(input);
+	const seconds = Math.max(0, Math.floor((Date.now() - date.getTime()) / 1000));
+	if (seconds < 60) return "just now";
+	const minutes = Math.floor(seconds / 60);
+	if (minutes < 60) return `${minutes}m`;
+	const hours = Math.floor(minutes / 60);
+	if (hours < 24) return `${hours}h`;
+	const days = Math.floor(hours / 24);
+	if (days < 7) return `${days}d`;
+	return `${Math.floor(days / 7)}w`;
+}
+
 /** Time-of-day greeting. */
 export function greeting(): string {
 	const hour = new Date().getHours();

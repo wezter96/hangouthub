@@ -1,0 +1,42 @@
+# Full-stack local run: Postgres + the API server.
+#   docker compose up --build
+# The app (Expo) still runs on the host with `bun run dev:native`.
+name: hangouthub-stack
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: hangouthub
+    ports:
+      - "5432:5432"
+    volumes:
+      - hangouthub_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+    environment:
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/hangouthub
+      BETTER_AUTH_SECRET: change-me-to-a-32-plus-char-secret-000
+      BETTER_AUTH_URL: http://localhost:3000
+      CORS_ORIGIN: http://localhost:8081
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    # Apply the schema on boot, then start the API.
+    command: ["sh", "-c", "bun run db:push && bun run apps/server/src/index.ts"]
+
+volumes:
+  hangouthub_pgdata:

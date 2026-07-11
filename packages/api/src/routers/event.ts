@@ -1,34 +1,11 @@
 import { db } from "@hangouthub/db";
+import { user } from "@hangouthub/db/schema/auth";
 import { event, group, rsvp } from "@hangouthub/db/schema/community";
-import { and, asc, eq, sql } from "drizzle-orm";
+import { and, asc, desc, eq, sql } from "drizzle-orm";
 import z from "zod";
 
 import { protectedProcedure, publicProcedure } from "../index";
-
-/** Emoji + color applied to a new event based on its category. */
-const CATEGORY_META: Record<string, { emoji: string; color: string }> = {
-	Tech: { emoji: "💻", color: "#2563EB" },
-	Outdoors: { emoji: "🌲", color: "#16A34A" },
-	Fitness: { emoji: "🏋️", color: "#EA580C" },
-	Food: { emoji: "🍽️", color: "#DB2777" },
-	Social: { emoji: "🎉", color: "#9333EA" },
-	Arts: { emoji: "🎨", color: "#0891B2" },
-};
-const DEFAULT_META = { emoji: "📅", color: "#F1435E" };
-
-function matchesQuery(
-	row: { title: string; venue: string; description: string; city: string },
-	q: string,
-): boolean {
-	const needle = q.trim().toLowerCase();
-	if (!needle) return true;
-	return (
-		row.title.toLowerCase().includes(needle) ||
-		row.venue.toLowerCase().includes(needle) ||
-		row.city.toLowerCase().includes(needle) ||
-		row.description.toLowerCase().includes(needle)
-	);
-}
+import { matchesQuery, metaForCategory } from "../lib/events";
 
 export const eventRouter = {
 	/** Upcoming events, soonest first. Optionally filtered by category and text. */
@@ -98,6 +75,19 @@ export const eventRouter = {
 			return { ...found, group: host, isAttending };
 		}),
 
+	/** People going to an event (most recent RSVPs first). */
+	getAttendees: publicProcedure
+		.input(z.object({ eventId: z.number().int() }))
+		.handler(async ({ input }) => {
+			return await db
+				.select({ id: user.id, name: user.name, image: user.image })
+				.from(rsvp)
+				.innerJoin(user, eq(user.id, rsvp.userId))
+				.where(eq(rsvp.eventId, input.eventId))
+				.orderBy(desc(rsvp.createdAt))
+				.limit(24);
+		}),
+
 	/** Events the current user has RSVP'd to, soonest first. Requires auth. */
 	getMine: protectedProcedure.handler(async ({ context }) => {
 		const rows = await db
@@ -130,10 +120,11 @@ export const eventRouter = {
 				startsAt: z.coerce.date(),
 				capacity: z.number().int().min(2).max(1000),
 				groupId: z.number().int().nullable().optional(),
+				imageUrl: z.string().url().nullable().optional(),
 			}),
 		)
 		.handler(async ({ input, context }) => {
-			const meta = CATEGORY_META[input.category] ?? DEFAULT_META;
+			const meta = metaForCategory(input.category);
 
 			const [created] = await db
 				.insert(event)
@@ -145,6 +136,7 @@ export const eventRouter = {
 					city: input.city,
 					emoji: meta.emoji,
 					color: meta.color,
+					imageUrl: input.imageUrl ?? null,
 					startsAt: input.startsAt,
 					capacity: input.capacity,
 					attendeeCount: 1,

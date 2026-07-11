@@ -53,6 +53,7 @@ export default function CreateEventScreen() {
 	const [dayOffset, setDayOffset] = useState(1);
 	const [hour, setHour] = useState(18);
 	const [capacity, setCapacity] = useState("30");
+	const [imageUrl, setImageUrl] = useState("");
 	const [groupId, setGroupId] = useState<number | null>(null);
 
 	const myGroups = useQuery({
@@ -112,6 +113,7 @@ export default function CreateEventScreen() {
 			startsAt,
 			capacity: capacityNum,
 			groupId,
+			imageUrl: imageUrl.trim() ? imageUrl.trim() : null,
 		});
 	};
 
@@ -301,6 +303,17 @@ export default function CreateEventScreen() {
 						onChangeText={(t) => setCapacity(t.replace(/[^0-9]/g, ""))}
 						placeholder="30"
 						keyboardType="number-pad"
+					/>
+				</TextField>
+
+				<TextField>
+					<Label>Cover image URL (optional)</Label>
+					<Input
+						value={imageUrl}
+						onChangeText={setImageUrl}
+						placeholder="https://…"
+						autoCapitalize="none"
+						keyboardType="url"
 					/>
 				</TextField>
 

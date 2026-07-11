@@ -41,6 +41,7 @@ export const event = pgTable(
 		city: text("city").notNull(),
 		emoji: text("emoji").notNull().default("📅"),
 		color: text("color").notNull().default("#6366F1"),
+		imageUrl: text("image_url"),
 		startsAt: timestamp("starts_at").notNull(),
 		capacity: integer("capacity").notNull().default(50),
 		attendeeCount: integer("attendee_count").notNull().default(0),
@@ -102,6 +103,25 @@ export const membership = pgTable(
 	],
 );
 
+/**
+ * A comment on an event's discussion thread.
+ */
+export const comment = pgTable(
+	"comment",
+	{
+		id: serial("id").primaryKey(),
+		eventId: integer("event_id")
+			.notNull()
+			.references(() => event.id, { onDelete: "cascade" }),
+		userId: text("user_id")
+			.notNull()
+			.references(() => user.id, { onDelete: "cascade" }),
+		body: text("body").notNull(),
+		createdAt: timestamp("created_at").defaultNow().notNull(),
+	},
+	(table) => [index("comment_event_idx").on(table.eventId)],
+);
+
 export const groupRelations = relations(group, ({ many }) => ({
 	events: many(event),
 	memberships: many(membership),
@@ -117,6 +137,18 @@ export const eventRelations = relations(event, ({ one, many }) => ({
 		references: [user.id],
 	}),
 	rsvps: many(rsvp),
+	comments: many(comment),
+}));
+
+export const commentRelations = relations(comment, ({ one }) => ({
+	event: one(event, {
+		fields: [comment.eventId],
+		references: [event.id],
+	}),
+	user: one(user, {
+		fields: [comment.userId],
+		references: [user.id],
+	}),
 }));
 
 export const rsvpRelations = relations(rsvp, ({ one }) => ({

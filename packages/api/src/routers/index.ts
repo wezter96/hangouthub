@@ -1,6 +1,7 @@
 import type { RouterClient } from "@orpc/server";
 
 import { protectedProcedure, publicProcedure } from "../index";
+import { commentRouter } from "./comment";
 import { eventRouter } from "./event";
 import { groupRouter } from "./group";
 import { todoRouter } from "./todo";
@@ -17,6 +18,7 @@ export const appRouter = {
 	}),
 	event: eventRouter,
 	group: groupRouter,
+	comment: commentRouter,
 	todo: todoRouter,
 };
 export type AppRouter = typeof appRouter;

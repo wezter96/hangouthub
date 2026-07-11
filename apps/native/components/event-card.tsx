@@ -1,7 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { cn, useThemeColor } from "heroui-native";
-import { Pressable, Text, View } from "react-native";
+import type { ReactNode } from "react";
+import { ImageBackground, Pressable, Text, View } from "react-native";
 
 import { formatCount, formatDateBadge, formatRelativeDay } from "@/lib/format";
 import type { EventListItem } from "@/lib/types";
@@ -26,37 +27,26 @@ export function EventCard({ event, className }: Props) {
 				)}
 			>
 				{/* Cover */}
-				<View
-					className="h-28 items-center justify-center"
-					style={{ backgroundColor: event.color }}
+				<CoverBadges
+					category={event.category}
+					color={event.color}
+					badge={badge}
 				>
-					<Text style={{ fontSize: 52 }}>{event.emoji}</Text>
-					<View
-						className="absolute top-3 left-3 rounded-full px-2.5 py-1"
-						style={{ backgroundColor: "rgba(0,0,0,0.28)" }}
-					>
-						<Text className="font-semibold text-white text-xs">
-							{event.category}
-						</Text>
-					</View>
-					<View
-						className="absolute top-3 right-3 items-center rounded-xl px-2.5 py-1"
-						style={{ backgroundColor: "rgba(255,255,255,0.96)" }}
-					>
-						<Text
-							className="font-bold text-[10px] tracking-wider"
-							style={{ color: event.color }}
+					{event.imageUrl ? (
+						<ImageBackground
+							source={{ uri: event.imageUrl }}
+							className="h-28 w-full"
+							resizeMode="cover"
+						/>
+					) : (
+						<View
+							className="h-28 items-center justify-center"
+							style={{ backgroundColor: event.color }}
 						>
-							{badge.month}
-						</Text>
-						<Text
-							className="font-extrabold text-sm leading-4"
-							style={{ color: "#111827" }}
-						>
-							{badge.day}
-						</Text>
-					</View>
-				</View>
+							<Text style={{ fontSize: 52 }}>{event.emoji}</Text>
+						</View>
+					)}
+				</CoverBadges>
 
 				{/* Body */}
 				<View className="p-4">
@@ -100,5 +90,46 @@ export function EventCard({ event, className }: Props) {
 				</View>
 			</Pressable>
 		</Link>
+	);
+}
+
+function CoverBadges({
+	category,
+	color,
+	badge,
+	children,
+}: {
+	category: string;
+	color: string;
+	badge: { month: string; day: string };
+	children: ReactNode;
+}) {
+	return (
+		<View className="h-28 w-full">
+			{children}
+			<View
+				className="absolute top-3 left-3 rounded-full px-2.5 py-1"
+				style={{ backgroundColor: "rgba(0,0,0,0.28)" }}
+			>
+				<Text className="font-semibold text-white text-xs">{category}</Text>
+			</View>
+			<View
+				className="absolute top-3 right-3 items-center rounded-xl px-2.5 py-1"
+				style={{ backgroundColor: "rgba(255,255,255,0.96)" }}
+			>
+				<Text
+					className="font-bold text-[10px] tracking-wider"
+					style={{ color }}
+				>
+					{badge.month}
+				</Text>
+				<Text
+					className="font-extrabold text-sm leading-4"
+					style={{ color: "#111827" }}
+				>
+					{badge.day}
+				</Text>
+			</View>
+		</View>
 	);
 }

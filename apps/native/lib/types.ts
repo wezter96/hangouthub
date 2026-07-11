@@ -19,3 +19,13 @@ export type GroupItem = Awaited<
 export type GroupDetail = NonNullable<
 	Awaited<ReturnType<AppRouterClient["group"]["getById"]>>
 >;
+
+/** A person attending an event. */
+export type EventAttendee = Awaited<
+	ReturnType<AppRouterClient["event"]["getAttendees"]>
+>[number];
+
+/** A comment on an event. */
+export type EventComment = Awaited<
+	ReturnType<AppRouterClient["comment"]["list"]>
+>[number];

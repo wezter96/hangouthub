@@ -1,0 +1,9 @@
+**/node_modules
+**/.expo
+**/dist
+**/.turbo
+.git
+.github
+**/*.tsbuildinfo
+**/.DS_Store
+apps/native/.expo
