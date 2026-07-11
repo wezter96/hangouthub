@@ -64,9 +64,15 @@ bun run dev
 
 - **Home** — greeting, branded hero, interest filters, upcoming events carousel,
   popular groups, and sign in / sign up.
-- **Explore** — Discover (events by category) and Groups tabs.
+- **Explore** — Discover (events by category, with **search**) and Groups tabs.
 - **Event detail** — cover, schedule, venue, attendance meter, host group, and a
   one-tap **RSVP** (auth-gated) that updates the going count live.
+- **Group detail** — cover, description, member count, **join / leave**, and the
+  group's upcoming events.
+- **Create event** — a form (category, venue, city, day/time, capacity, optional
+  host group) that publishes a real event and auto-RSVPs the creator.
+- **Profile** — avatar, the events you're **Going** to, events you're **Hosting**,
+  and **Your groups**, with sign out.
 - **My Tasks** — the original Better-T-Stack todo example, kept as a working
   end-to-end demo of the oRPC + Drizzle wiring.
 
@@ -76,7 +82,7 @@ bun run dev
 hangouthub/
 ├── apps/
 │   ├── native/            # Expo app (iOS, Android, web via Expo Router)
-│   │   ├── app/           # Routes: (drawer) → Home, (tabs), event/[id], modal
+│   │   ├── app/           # Routes: (drawer) → Home/Explore/Profile, event/[id], group/[id], modal
 │   │   ├── components/    # EventCard, GroupCard, CategoryPills, AuthPanel, …
 │   │   ├── constants/     # Brand colors + categories
 │   │   └── lib/           # Formatting helpers, shared API types
@@ -92,9 +98,10 @@ hangouthub/
 ## Data model
 
 - **group** — a community (name, category, city, member count, emoji/color).
-- **event** — a scheduled meetup hosted by a group (title, venue, start time,
-  capacity, attendee count).
+- **event** — a scheduled meetup (title, venue, start time, capacity, attendee
+  count) optionally tied to a host group and/or a creator.
 - **rsvp** — a member's RSVP to an event (drives the going count).
+- **membership** — a user's membership in a group (drives the member count).
 
 ## Available scripts
 
