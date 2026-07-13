@@ -1,8 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { Link } from "expo-router";
 import { cn, useThemeColor } from "heroui-native";
 import { Pressable, Text, View } from "react-native";
 
+import { Display } from "@/components/display";
+import { gradientFor } from "@/constants/theme";
 import { formatCount } from "@/lib/format";
 import type { GroupItem } from "@/lib/types";
 
@@ -13,41 +16,39 @@ type Props = {
 
 export function GroupCard({ group, className }: Props) {
 	const mutedColor = useThemeColor("muted");
+	const [from, to] = gradientFor(group.category);
 
 	return (
 		<Link href={{ pathname: "/group/[id]", params: { id: group.id } }} asChild>
 			<Pressable
 				className={cn(
-					"flex-row items-center gap-3 rounded-3xl border border-border bg-surface p-3 active:opacity-80",
+					"flex-row items-center gap-3.5 rounded-3xl border border-border bg-surface p-3 active:opacity-90",
 					className,
 				)}
 			>
-				<View
-					className="h-14 w-14 items-center justify-center rounded-2xl"
-					style={{ backgroundColor: `${group.color}22` }}
+				<LinearGradient
+					colors={[from, to]}
+					start={{ x: 0, y: 0 }}
+					end={{ x: 1, y: 1 }}
+					style={{
+						width: 56,
+						height: 56,
+						borderRadius: 18,
+						alignItems: "center",
+						justifyContent: "center",
+					}}
 				>
 					<Text style={{ fontSize: 26 }}>{group.emoji}</Text>
-				</View>
+				</LinearGradient>
 
 				<View className="flex-1">
-					<Text
-						className="font-semibold text-base text-foreground"
-						numberOfLines={1}
-					>
+					<Display className="text-base text-foreground" numberOfLines={1}>
 						{group.name}
-					</Text>
-					<View className="mt-0.5 flex-row items-center gap-1.5">
-						<View
-							className="rounded-full px-2 py-0.5"
-							style={{ backgroundColor: `${group.color}22` }}
-						>
-							<Text
-								className="font-semibold text-[11px]"
-								style={{ color: group.color }}
-							>
-								{group.category}
-							</Text>
-						</View>
+					</Display>
+					<View className="mt-1 flex-row items-center gap-1.5">
+						<Text className="font-semibold text-[11px]" style={{ color: to }}>
+							{group.category}
+						</Text>
 						<Text className="text-muted text-xs">·</Text>
 						<Text className="text-muted text-xs">
 							{formatCount(group.memberCount)} members

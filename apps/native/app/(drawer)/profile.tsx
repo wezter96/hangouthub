@@ -1,14 +1,16 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
+import { LinearGradient } from "expo-linear-gradient";
 import { Link } from "expo-router";
 import { useThemeColor } from "heroui-native";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 import { Container } from "@/components/container";
-import { EventCard } from "@/components/event-card";
+import { Display } from "@/components/display";
+import { EventCarousel } from "@/components/event-carousel";
 import { GroupCard } from "@/components/group-card";
 import { SectionHeader } from "@/components/section-header";
-import { BRAND } from "@/constants/theme";
+import { BRAND, BRAND_GRADIENT } from "@/constants/theme";
 import { authClient } from "@/lib/auth-client";
 import type { EventListItem } from "@/lib/types";
 import { orpc, queryClient } from "@/utils/orpc";
@@ -29,17 +31,7 @@ function EventRow({
 			</View>
 		);
 	}
-	return (
-		<ScrollView
-			horizontal
-			showsHorizontalScrollIndicator={false}
-			contentContainerStyle={{ gap: 14, paddingHorizontal: 20 }}
-		>
-			{events.map((event) => (
-				<EventCard key={event.id} event={event} className="w-72" />
-			))}
-		</ScrollView>
-	);
+	return <EventCarousel events={events} />;
 }
 
 export default function ProfileScreen() {
@@ -69,9 +61,9 @@ export default function ProfileScreen() {
 					>
 						<Ionicons name="person" size={28} color="#ffffff" />
 					</View>
-					<Text className="mt-4 font-bold text-foreground text-xl">
+					<Display weight="bold" className="mt-4 text-foreground text-xl">
 						You're not signed in
-					</Text>
+					</Display>
 					<Text className="mt-2 max-w-xs text-center text-muted text-sm">
 						Sign in from the Home tab to see your events and groups.
 					</Text>
@@ -90,34 +82,44 @@ export default function ProfileScreen() {
 
 	return (
 		<Container scrollViewProps={{ showsVerticalScrollIndicator: false }}>
-			{/* Profile header */}
-			<View className="items-center px-5 pt-6 pb-2">
-				<View
-					className="h-20 w-20 items-center justify-center rounded-full"
-					style={{ backgroundColor: BRAND }}
-				>
-					<Text className="font-bold text-2xl text-white">
-						{session.user.name?.charAt(0).toUpperCase() ?? "?"}
-					</Text>
-				</View>
-				<Text className="mt-3 font-extrabold text-foreground text-xl">
-					{session.user.name}
-				</Text>
-				<Text className="text-muted text-sm">{session.user.email}</Text>
+			{/* Banner + profile */}
+			<View className="items-center">
+				<LinearGradient
+					colors={[BRAND_GRADIENT[0], BRAND_GRADIENT[1]]}
+					start={{ x: 0, y: 0 }}
+					end={{ x: 1, y: 1 }}
+					style={{ height: 108, width: "100%", position: "absolute", top: 0 }}
+				/>
+				<View className="mt-14 items-center px-5">
+					<View className="rounded-full border-4 border-background">
+						<View
+							className="h-20 w-20 items-center justify-center rounded-full"
+							style={{ backgroundColor: BRAND }}
+						>
+							<Text className="font-bold text-2xl text-white">
+								{session.user.name?.charAt(0).toUpperCase() ?? "?"}
+							</Text>
+						</View>
+					</View>
+					<Display weight="bold" className="mt-3 text-2xl text-foreground">
+						{session.user.name}
+					</Display>
+					<Text className="text-muted text-sm">{session.user.email}</Text>
 
-				<Pressable
-					onPress={() => {
-						authClient.signOut();
-						queryClient.invalidateQueries();
-					}}
-					className="mt-4 rounded-full border border-border px-5 py-2 active:opacity-70"
-				>
-					<Text className="font-semibold text-danger text-sm">Sign out</Text>
-				</Pressable>
+					<Pressable
+						onPress={() => {
+							authClient.signOut();
+							queryClient.invalidateQueries();
+						}}
+						className="mt-4 rounded-full border border-border px-5 py-2 active:opacity-70"
+					>
+						<Text className="font-semibold text-danger text-sm">Sign out</Text>
+					</Pressable>
+				</View>
 			</View>
 
 			{/* Going */}
-			<View className="mt-6 px-5">
+			<View className="mt-8 px-5">
 				<SectionHeader title="Going" />
 			</View>
 			<EventRow
@@ -126,7 +128,7 @@ export default function ProfileScreen() {
 			/>
 
 			{/* Hosting */}
-			<View className="mt-7 px-5">
+			<View className="mt-8 px-5">
 				<SectionHeader title="Hosting" />
 			</View>
 			<EventRow
@@ -135,7 +137,7 @@ export default function ProfileScreen() {
 			/>
 
 			{/* Groups */}
-			<View className="mt-7 px-5 pb-10">
+			<View className="mt-8 px-5 pb-10">
 				<SectionHeader title="Your groups" />
 				{(myGroups.data ?? []).length === 0 ? (
 					<View className="items-center rounded-3xl border border-border bg-surface py-8">

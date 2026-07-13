@@ -5,7 +5,6 @@ import {
 	Button,
 	Input,
 	Label,
-	Spinner,
 	TextField,
 	useThemeColor,
 	useToast,
@@ -14,6 +13,8 @@ import { useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 
 import { Container } from "@/components/container";
+import { Display } from "@/components/display";
+import { PrimaryButton } from "@/components/primary-button";
 import { BRAND, CATEGORIES } from "@/constants/theme";
 import { authClient } from "@/lib/auth-client";
 import { orpc, queryClient } from "@/utils/orpc";
@@ -152,9 +153,9 @@ export default function CreateEventScreen() {
 				keyboardShouldPersistTaps="handled"
 				contentContainerStyle={{ padding: 20, paddingBottom: 40, gap: 18 }}
 			>
-				<Text className="font-extrabold text-2xl text-foreground">
+				<Display weight="bold" className="text-2xl text-foreground">
 					Host a hangout
-				</Text>
+				</Display>
 
 				<TextField>
 					<Label>Title</Label>
@@ -365,20 +366,14 @@ export default function CreateEventScreen() {
 					</View>
 				) : null}
 
-				<Pressable
-					onPress={handleSubmit}
-					disabled={createMutation.isPending}
-					className="mt-2 flex-row items-center justify-center gap-2 rounded-2xl py-4 active:opacity-90"
-					style={{ backgroundColor: isValid ? BRAND : mutedColor }}
-				>
-					{createMutation.isPending ? (
-						<Spinner size="sm" color="default" />
-					) : (
-						<Text className="font-bold text-base text-white">
-							Publish event
-						</Text>
-					)}
-				</Pressable>
+				<View className="mt-2">
+					<PrimaryButton
+						label="Publish event"
+						onPress={handleSubmit}
+						loading={createMutation.isPending}
+						disabled={!isValid}
+					/>
+				</View>
 			</ScrollView>
 		</Container>
 	);

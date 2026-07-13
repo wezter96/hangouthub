@@ -3,6 +3,7 @@ import { Spinner } from "heroui-native";
 import { ScrollView, Text, View } from "react-native";
 
 import { Container } from "@/components/container";
+import { Display } from "@/components/display";
 import { GroupCard } from "@/components/group-card";
 import { orpc } from "@/utils/orpc";
 
@@ -12,7 +13,9 @@ export default function GroupsScreen() {
 	return (
 		<Container isScrollable={false}>
 			<View className="px-5 pt-3 pb-4">
-				<Text className="font-extrabold text-3xl text-foreground">Groups</Text>
+				<Display weight="bold" className="text-3xl text-foreground">
+					Groups
+				</Display>
 				<Text className="mt-1 text-muted text-sm">
 					Communities to join and grow with
 				</Text>

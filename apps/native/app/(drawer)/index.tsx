@@ -2,14 +2,17 @@ import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useThemeColor } from "heroui-native";
 import { useMemo, useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 import { AuthPanel } from "@/components/auth-panel";
+import { CategoryPills } from "@/components/category-pills";
 import { Container } from "@/components/container";
-import { EventCard } from "@/components/event-card";
+import { Display } from "@/components/display";
+import { EventCarousel } from "@/components/event-carousel";
+import { FeaturedEventCard } from "@/components/featured-event-card";
 import { GroupCard } from "@/components/group-card";
 import { SectionHeader } from "@/components/section-header";
-import { BRAND, CATEGORIES } from "@/constants/theme";
+import { BRAND } from "@/constants/theme";
 import { authClient } from "@/lib/auth-client";
 import { greeting } from "@/lib/format";
 import { orpc, queryClient } from "@/utils/orpc";
@@ -35,24 +38,30 @@ export default function HomeScreen() {
 			: all.filter((event) => event.category === category);
 	}, [events.data, category]);
 
+	const featured = filteredEvents[0];
+	const rest = filteredEvents.slice(1);
+
 	return (
 		<Container scrollViewProps={{ showsVerticalScrollIndicator: false }}>
 			{/* Header */}
 			<View className="px-5 pt-2 pb-4">
 				<View className="flex-row items-center justify-between">
-					<View>
+					<View className="flex-1">
 						<Text className="text-muted text-sm">
 							{greeting()}
 							{firstName ? "," : ""}
 						</Text>
-						<Text className="font-extrabold text-2xl text-foreground">
-							{firstName ?? "Welcome 👋"}
-						</Text>
+						<Display
+							weight="bold"
+							className="text-[26px] text-foreground leading-8"
+						>
+							{firstName ?? "Welcome"}
+						</Display>
 					</View>
 					<View className="flex-row items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1.5">
 						<View
 							className="h-2 w-2 rounded-full"
-							style={{ backgroundColor: isConnected ? "#22C55E" : mutedColor }}
+							style={{ backgroundColor: isConnected ? "#2E9E6B" : mutedColor }}
 						/>
 						<Text className="font-medium text-muted text-xs">
 							{isConnected ? "Live" : "Offline"}
@@ -68,91 +77,44 @@ export default function HomeScreen() {
 				</View>
 			</View>
 
-			{/* Hero */}
-			<View className="px-5">
-				<View
-					className="overflow-hidden rounded-3xl p-5"
-					style={{ backgroundColor: BRAND }}
-				>
-					<Text className="font-bold text-white/80 text-xs uppercase tracking-widest">
-						HangoutHub
-					</Text>
-					<Text className="mt-1.5 font-extrabold text-2xl text-white leading-7">
-						Find your people.{"\n"}Do more together.
-					</Text>
-					<Text className="mt-2 text-sm text-white/90">
-						Discover local events and communities built around what you love.
-					</Text>
+			{/* Featured */}
+			{featured ? (
+				<View className="px-5">
+					<FeaturedEventCard event={featured} />
 				</View>
-			</View>
+			) : null}
 
 			{/* Interests */}
-			<View className="mt-6">
-				<Text className="mb-3 px-5 font-bold text-foreground text-xl">
-					Browse by interest
-				</Text>
-				<ScrollView
-					horizontal
-					showsHorizontalScrollIndicator={false}
-					contentContainerStyle={{ gap: 8, paddingHorizontal: 20 }}
+			<View className="mt-7">
+				<Display
+					weight="bold"
+					className="mb-3.5 px-5 text-[22px] text-foreground leading-7"
 				>
-					{CATEGORIES.map((item) => {
-						const isActive = category === item.label;
-						return (
-							<Pressable
-								key={item.label}
-								onPress={() => setCategory(item.label)}
-								className="flex-row items-center gap-1.5 rounded-full border px-4 py-2 active:opacity-70"
-								style={{
-									backgroundColor: isActive ? item.color : "transparent",
-									borderColor: isActive ? item.color : `${mutedColor}55`,
-								}}
-							>
-								<Ionicons
-									name={item.icon}
-									size={15}
-									color={isActive ? "#ffffff" : item.color}
-								/>
-								<Text
-									className="font-semibold text-foreground text-sm"
-									style={isActive ? { color: "#ffffff" } : undefined}
-								>
-									{item.label}
-								</Text>
-							</Pressable>
-						);
-					})}
-				</ScrollView>
+					Browse by interest
+				</Display>
+				<CategoryPills selected={category} onSelect={setCategory} />
 			</View>
 
 			{/* Upcoming events */}
-			<View className="mt-7 px-5">
+			<View className="mt-8 px-5">
 				<SectionHeader title="Upcoming near you" />
 			</View>
-			{filteredEvents.length === 0 ? (
+			{rest.length === 0 ? (
 				<View className="mx-5 items-center rounded-3xl border border-border bg-surface py-10">
 					<Ionicons name="calendar-outline" size={34} color={mutedColor} />
 					<Text className="mt-3 font-medium text-foreground">
-						No events in this category yet
+						Nothing else in this category
 					</Text>
 					<Text className="mt-1 text-muted text-xs">
 						Try another interest above
 					</Text>
 				</View>
 			) : (
-				<ScrollView
-					horizontal
-					showsHorizontalScrollIndicator={false}
-					contentContainerStyle={{ gap: 14, paddingHorizontal: 20 }}
-				>
-					{filteredEvents.map((event) => (
-						<EventCard key={event.id} event={event} className="w-72" />
-					))}
-				</ScrollView>
+				<EventCarousel events={rest} />
 			)}
 
 			{/* Popular groups */}
-			<View className="mt-8 px-5">
+			<View className="mt-9 px-5">
 				<SectionHeader title="Popular groups" />
 				<View className="gap-3">
 					{(groups.data ?? []).slice(0, 4).map((group) => (
@@ -162,7 +124,7 @@ export default function HomeScreen() {
 			</View>
 
 			{/* Auth / account */}
-			<View className="mt-8 px-5 pb-8">
+			<View className="mt-8 px-5 pb-10">
 				{session?.user ? (
 					<View className="rounded-3xl border border-border bg-surface p-4">
 						<View className="flex-row items-center gap-3">

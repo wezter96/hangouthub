@@ -6,6 +6,7 @@ import { ScrollView, Text, View } from "react-native";
 
 import { CategoryPills } from "@/components/category-pills";
 import { Container } from "@/components/container";
+import { Display } from "@/components/display";
 import { EventCard } from "@/components/event-card";
 import { orpc } from "@/utils/orpc";
 
@@ -32,17 +33,17 @@ export default function DiscoverScreen() {
 	return (
 		<Container isScrollable={false}>
 			<View className="px-5 pt-3 pb-3">
-				<Text className="font-extrabold text-3xl text-foreground">
+				<Display weight="bold" className="text-3xl text-foreground">
 					Discover
-				</Text>
+				</Display>
 				<Text className="mt-1 text-muted text-sm">
 					Find events happening near you
 				</Text>
 			</View>
 
 			{/* Search */}
-			<View className="px-5 pb-3">
-				<View className="flex-row items-center gap-2 rounded-2xl border border-border bg-surface px-3.5">
+			<View className="px-5 pb-4">
+				<View className="flex-row items-center gap-2 rounded-2xl border border-border bg-surface px-4">
 					<Ionicons name="search" size={18} color={mutedColor} />
 					<View className="flex-1">
 						<TextField>
@@ -89,7 +90,7 @@ export default function DiscoverScreen() {
 					contentContainerStyle={{
 						paddingHorizontal: 20,
 						paddingBottom: 24,
-						gap: 14,
+						gap: 16,
 					}}
 				>
 					{filtered.map((event) => (

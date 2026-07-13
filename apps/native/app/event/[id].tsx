@@ -9,18 +9,15 @@ import {
 	useToast,
 } from "heroui-native";
 import { useState } from "react";
-import {
-	Image,
-	Linking,
-	Pressable,
-	ScrollView,
-	Text,
-	View,
-} from "react-native";
+import { Linking, Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Avatar } from "@/components/avatar";
+import { AvatarStack } from "@/components/avatar-stack";
+import { Display } from "@/components/display";
+import { EventCover } from "@/components/event-cover";
 import { GroupCard } from "@/components/group-card";
+import { PrimaryButton } from "@/components/primary-button";
 import { BRAND } from "@/constants/theme";
 import { authClient } from "@/lib/auth-client";
 import {
@@ -128,59 +125,45 @@ export default function EventDetailScreen() {
 
 	return (
 		<View className="flex-1 bg-background">
-			<Stack.Screen options={{ title: "Event", headerTransparent: false }} />
+			<Stack.Screen options={{ title: "Event" }} />
 
 			<ScrollView
 				showsVerticalScrollIndicator={false}
 				keyboardShouldPersistTaps="handled"
-				contentContainerStyle={{ paddingBottom: 130 }}
+				contentContainerStyle={{ paddingBottom: 132 }}
 			>
-				{/* Cover */}
-				{event.imageUrl ? (
-					<View className="h-52">
-						<Image
-							source={{ uri: event.imageUrl }}
-							style={{ width: "100%", height: "100%" }}
-						/>
-						<View
-							className="absolute bottom-4 left-5 rounded-full px-3 py-1.5"
-							style={{ backgroundColor: "rgba(0,0,0,0.45)" }}
-						>
-							<Text className="font-semibold text-white text-xs">
-								{event.category}
-							</Text>
-						</View>
-					</View>
-				) : (
+				{/* Cover with overlaid title */}
+				<EventCover
+					imageUrl={event.imageUrl}
+					emoji={event.emoji}
+					category={event.category}
+					heightClass="h-64"
+					emojiSize={104}
+				>
 					<View
-						className="h-52 items-center justify-center"
-						style={{ backgroundColor: event.color }}
+						className="absolute top-4 left-5 rounded-full px-3 py-1.5"
+						style={{ backgroundColor: "rgba(20,17,24,0.42)" }}
 					>
-						<Text style={{ fontSize: 88 }}>{event.emoji}</Text>
-						<View
-							className="absolute bottom-4 left-5 rounded-full px-3 py-1.5"
-							style={{ backgroundColor: "rgba(0,0,0,0.3)" }}
-						>
-							<Text className="font-semibold text-white text-xs">
-								{event.category}
-							</Text>
-						</View>
+						<Text className="font-semibold text-[11px] text-white tracking-wide">
+							{event.category}
+						</Text>
 					</View>
-				)}
+					<View className="absolute right-0 bottom-0 left-0 px-5 pb-4">
+						<Display weight="bold" className="text-2xl text-white leading-8">
+							{event.title}
+						</Display>
+					</View>
+				</EventCover>
 
 				<View className="px-5 pt-5">
-					<Text className="font-extrabold text-2xl text-foreground">
-						{event.title}
-					</Text>
-
 					{/* Meta */}
-					<View className="mt-4 gap-3">
+					<View className="gap-3">
 						<View className="flex-row items-center gap-3">
 							<View
-								className="h-9 w-9 items-center justify-center rounded-xl"
-								style={{ backgroundColor: `${event.color}22` }}
+								className="h-10 w-10 items-center justify-center rounded-2xl"
+								style={{ backgroundColor: `${BRAND}1a` }}
 							>
-								<Ionicons name="calendar" size={18} color={event.color} />
+								<Ionicons name="calendar" size={18} color={BRAND} />
 							</View>
 							<Text className="font-medium text-foreground text-sm">
 								{formatEventDateTime(event.startsAt)}
@@ -189,10 +172,10 @@ export default function EventDetailScreen() {
 
 						<View className="flex-row items-center gap-3">
 							<View
-								className="h-9 w-9 items-center justify-center rounded-xl"
-								style={{ backgroundColor: `${event.color}22` }}
+								className="h-10 w-10 items-center justify-center rounded-2xl"
+								style={{ backgroundColor: `${BRAND}1a` }}
 							>
-								<Ionicons name="location" size={18} color={event.color} />
+								<Ionicons name="location" size={18} color={BRAND} />
 							</View>
 							<View className="flex-1">
 								<Text className="font-medium text-foreground text-sm">
@@ -204,7 +187,7 @@ export default function EventDetailScreen() {
 								onPress={() =>
 									Linking.openURL(mapsUrl(event.venue, event.city))
 								}
-								className="flex-row items-center gap-1 rounded-full border border-border px-3 py-1.5 active:opacity-70"
+								className="flex-row items-center gap-1 rounded-full border border-border px-3 py-2 active:opacity-70"
 							>
 								<Ionicons name="map-outline" size={14} color={mutedColor} />
 								<Text className="font-semibold text-foreground text-xs">
@@ -222,10 +205,10 @@ export default function EventDetailScreen() {
 							</Text>
 							<Text className="text-muted text-xs">{spotsLeft} spots left</Text>
 						</View>
-						<View className="mt-2.5 h-2 overflow-hidden rounded-full bg-background">
+						<View className="mt-2.5 h-2 overflow-hidden rounded-full bg-surface-secondary">
 							<View
 								className="h-full rounded-full"
-								style={{ width: `${fillPct}%`, backgroundColor: event.color }}
+								style={{ width: `${fillPct}%`, backgroundColor: BRAND }}
 							/>
 						</View>
 					</View>
@@ -233,32 +216,17 @@ export default function EventDetailScreen() {
 					{/* Who's going */}
 					{attendees.length > 0 ? (
 						<View className="mt-6">
-							<Text className="mb-3 font-bold text-foreground text-lg">
+							<Display weight="bold" className="mb-3 text-foreground text-lg">
 								Who's going
-							</Text>
-							<View className="flex-row items-center">
-								{attendees.slice(0, 8).map((person, index) => (
-									<View
-										key={person.id}
-										style={{ marginLeft: index === 0 ? 0 : -10 }}
-										className="rounded-full border-2 border-background"
-									>
-										<Avatar name={person.name} image={person.image} size={38} />
-									</View>
-								))}
-								{attendees.length > 8 ? (
-									<Text className="ml-3 text-muted text-sm">
-										+{attendees.length - 8} more
-									</Text>
-								) : null}
-							</View>
+							</Display>
+							<AvatarStack people={attendees} max={8} size={40} />
 						</View>
 					) : null}
 
 					{/* About */}
-					<Text className="mt-6 font-bold text-foreground text-lg">
+					<Display weight="bold" className="mt-7 text-foreground text-lg">
 						About this event
-					</Text>
+					</Display>
 					<Text className="mt-2 text-muted text-sm leading-6">
 						{event.description}
 					</Text>
@@ -266,19 +234,19 @@ export default function EventDetailScreen() {
 					{/* Host */}
 					{event.group ? (
 						<>
-							<Text className="mt-6 font-bold text-foreground text-lg">
+							<Display weight="bold" className="mt-7 text-foreground text-lg">
 								Hosted by
-							</Text>
-							<View className="mt-2">
+							</Display>
+							<View className="mt-3">
 								<GroupCard group={event.group} />
 							</View>
 						</>
 					) : null}
 
 					{/* Discussion */}
-					<Text className="mt-7 font-bold text-foreground text-lg">
+					<Display weight="bold" className="mt-7 text-foreground text-lg">
 						Discussion{comments.length ? ` · ${comments.length}` : ""}
-					</Text>
+					</Display>
 
 					<View className="mt-3 flex-row items-center gap-2">
 						<View className="flex-1">
@@ -295,7 +263,7 @@ export default function EventDetailScreen() {
 						<Pressable
 							onPress={handleComment}
 							disabled={commentMutation.isPending || !commentText.trim()}
-							className="h-11 w-11 items-center justify-center rounded-2xl active:opacity-80"
+							className="h-12 w-12 items-center justify-center rounded-2xl active:opacity-80"
 							style={{
 								backgroundColor: commentText.trim() ? BRAND : mutedColor,
 							}}
@@ -303,7 +271,7 @@ export default function EventDetailScreen() {
 							{commentMutation.isPending ? (
 								<Spinner size="sm" color="default" />
 							) : (
-								<Ionicons name="send" size={17} color="#ffffff" />
+								<Ionicons name="arrow-up" size={19} color="#ffffff" />
 							)}
 						</Pressable>
 					</View>
@@ -316,7 +284,7 @@ export default function EventDetailScreen() {
 						<View className="mt-4 gap-4">
 							{comments.map((c) => (
 								<View key={c.id} className="flex-row gap-3">
-									<Avatar name={c.authorName} image={c.authorImage} size={36} />
+									<Avatar name={c.authorName} image={c.authorImage} size={38} />
 									<View className="flex-1">
 										<View className="flex-row items-center gap-2">
 											<Text className="font-semibold text-foreground text-sm">
@@ -342,40 +310,22 @@ export default function EventDetailScreen() {
 				className="absolute right-0 bottom-0 left-0 border-border border-t px-5 pt-3"
 				style={{ backgroundColor, paddingBottom: insets.bottom + 12 }}
 			>
-				<Pressable
-					onPress={handleRsvp}
-					disabled={rsvpMutation.isPending || isFull}
-					className="flex-row items-center justify-center gap-2 rounded-2xl py-4 active:opacity-90"
-					style={{
-						backgroundColor: event.isAttending
-							? "transparent"
-							: isFull
-								? mutedColor
-								: BRAND,
-						borderWidth: event.isAttending ? 1.5 : 0,
-						borderColor: event.isAttending ? BRAND : "transparent",
-					}}
-				>
-					{rsvpMutation.isPending ? (
-						<Spinner size="sm" color="default" />
-					) : (
-						<>
-							{event.isAttending ? (
-								<Ionicons name="checkmark-circle" size={20} color={BRAND} />
-							) : null}
-							<Text
-								className="font-bold text-base"
-								style={{ color: event.isAttending ? BRAND : "#ffffff" }}
-							>
-								{event.isAttending
-									? "You're going"
-									: isFull
-										? "Event full"
-										: "RSVP — I'm going"}
-							</Text>
-						</>
-					)}
-				</Pressable>
+				{event.isAttending ? (
+					<PrimaryButton
+						label="You're going"
+						icon="checkmark-circle"
+						variant="outline"
+						loading={rsvpMutation.isPending}
+						onPress={handleRsvp}
+					/>
+				) : (
+					<PrimaryButton
+						label={isFull ? "Event full" : "RSVP — I'm going"}
+						loading={rsvpMutation.isPending}
+						disabled={isFull}
+						onPress={handleRsvp}
+					/>
+				)}
 			</View>
 		</View>
 	);

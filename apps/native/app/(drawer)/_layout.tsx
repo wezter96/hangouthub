@@ -5,6 +5,7 @@ import { useThemeColor } from "heroui-native";
 import { useCallback } from "react";
 import { Pressable, Text, View } from "react-native";
 
+import { Display } from "@/components/display";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { BRAND } from "@/constants/theme";
 
@@ -12,12 +13,12 @@ function BrandTitle() {
 	const foreground = useThemeColor("foreground");
 	return (
 		<View className="flex-row items-center">
-			<Text className="font-extrabold text-lg" style={{ color: foreground }}>
+			<Display weight="bold" className="text-xl" style={{ color: foreground }}>
 				Hangout
-			</Text>
-			<Text className="font-extrabold text-lg" style={{ color: BRAND }}>
+			</Display>
+			<Display weight="bold" className="text-xl" style={{ color: BRAND }}>
 				Hub
-			</Text>
+			</Display>
 		</View>
 	);
 }

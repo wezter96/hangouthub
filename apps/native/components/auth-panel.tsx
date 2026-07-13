@@ -3,6 +3,7 @@ import { env } from "@hangouthub/env/native";
 import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 
+import { Display } from "@/components/display";
 import { SignIn } from "@/components/sign-in";
 import { SignUp } from "@/components/sign-up";
 import { BRAND } from "@/constants/theme";
@@ -19,9 +20,9 @@ export function AuthPanel() {
 
 	return (
 		<View className="rounded-3xl border border-border bg-surface p-4">
-			<Text className="font-bold text-foreground text-lg">
+			<Display weight="bold" className="text-foreground text-xl">
 				Join the community
-			</Text>
+			</Display>
 			<Text className="mt-1 text-muted text-sm">
 				Sign in to RSVP to events and connect with groups near you.
 			</Text>

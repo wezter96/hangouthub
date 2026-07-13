@@ -2,12 +2,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { Spinner, useThemeColor, useToast } from "heroui-native";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 import { Container } from "@/components/container";
-import { EventCard } from "@/components/event-card";
+import { Display } from "@/components/display";
+import { EventCarousel } from "@/components/event-carousel";
+import { EventCover } from "@/components/event-cover";
+import { PrimaryButton } from "@/components/primary-button";
 import { SectionHeader } from "@/components/section-header";
-import { BRAND } from "@/constants/theme";
 import { authClient } from "@/lib/auth-client";
 import { formatCount } from "@/lib/format";
 import { orpc, queryClient } from "@/utils/orpc";
@@ -72,70 +74,35 @@ export default function GroupDetailScreen() {
 		<Container>
 			<Stack.Screen options={{ title: group.name }} />
 
-			{/* Cover */}
-			<View
-				className="h-44 items-center justify-center"
-				style={{ backgroundColor: group.color }}
+			<EventCover
+				emoji={group.emoji}
+				category={group.category}
+				heightClass="h-56"
+				emojiSize={92}
 			>
-				<Text style={{ fontSize: 76 }}>{group.emoji}</Text>
-			</View>
-
-			<View className="px-5 pt-5">
-				<Text className="font-extrabold text-2xl text-foreground">
-					{group.name}
-				</Text>
-
-				<View className="mt-2 flex-row items-center gap-2">
-					<View
-						className="rounded-full px-2.5 py-1"
-						style={{ backgroundColor: `${group.color}22` }}
-					>
-						<Text
-							className="font-semibold text-xs"
-							style={{ color: group.color }}
-						>
-							{group.category}
-						</Text>
-					</View>
-					<View className="flex-row items-center gap-1">
-						<Ionicons name="people" size={14} color={mutedColor} />
-						<Text className="text-muted text-xs">
+				<View className="absolute right-0 bottom-0 left-0 px-5 pb-4">
+					<Display weight="bold" className="text-2xl text-white leading-8">
+						{group.name}
+					</Display>
+					<View className="mt-1.5 flex-row items-center gap-2">
+						<Ionicons name="people" size={14} color="rgba(255,255,255,0.9)" />
+						<Text className="font-medium text-white text-xs">
 							{formatCount(group.memberCount)} members
 						</Text>
+						<Text className="text-white/60 text-xs">·</Text>
+						<Text className="font-medium text-white text-xs">{group.city}</Text>
 					</View>
-					<Text className="text-muted text-xs">·</Text>
-					<Text className="text-muted text-xs">{group.city}</Text>
 				</View>
+			</EventCover>
 
-				{/* Join / leave */}
-				<Pressable
+			<View className="px-5 pt-5">
+				<PrimaryButton
+					label={group.isMember ? "Joined" : "Join group"}
+					icon={group.isMember ? "checkmark-circle" : "add"}
+					variant={group.isMember ? "outline" : "solid"}
+					loading={joinMutation.isPending}
 					onPress={handleJoin}
-					disabled={joinMutation.isPending}
-					className="mt-4 flex-row items-center justify-center gap-2 rounded-2xl py-3.5 active:opacity-90"
-					style={{
-						backgroundColor: group.isMember ? "transparent" : BRAND,
-						borderWidth: group.isMember ? 1.5 : 0,
-						borderColor: group.isMember ? BRAND : "transparent",
-					}}
-				>
-					{joinMutation.isPending ? (
-						<Spinner size="sm" color="default" />
-					) : (
-						<>
-							<Ionicons
-								name={group.isMember ? "checkmark-circle" : "add"}
-								size={19}
-								color={group.isMember ? BRAND : "#ffffff"}
-							/>
-							<Text
-								className="font-bold text-base"
-								style={{ color: group.isMember ? BRAND : "#ffffff" }}
-							>
-								{group.isMember ? "Joined" : "Join group"}
-							</Text>
-						</>
-					)}
-				</Pressable>
+				/>
 
 				<Text className="mt-6 text-muted text-sm leading-6">
 					{group.description}
@@ -155,19 +122,7 @@ export default function GroupDetailScreen() {
 					<Text className="mt-1 text-muted text-xs">Check back soon</Text>
 				</View>
 			) : (
-				<ScrollView
-					horizontal
-					showsHorizontalScrollIndicator={false}
-					contentContainerStyle={{
-						gap: 14,
-						paddingHorizontal: 20,
-						paddingBottom: 8,
-					}}
-				>
-					{group.events.map((event) => (
-						<EventCard key={event.id} event={event} className="w-72" />
-					))}
-				</ScrollView>
+				<EventCarousel events={group.events} />
 			)}
 
 			<View className="h-8" />

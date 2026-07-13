@@ -3,3 +3,76 @@
 @import "heroui-native/styles";
 
 @source "./node_modules/heroui-native/lib";
+
+/* ------------------------------------------------------------------ */
+/* HangoutHub — warm, editorial palette layered over HeroUI defaults.  */
+/* ------------------------------------------------------------------ */
+@layer theme {
+	:root {
+		@variant light {
+			--background: #faf7f2; /* warm paper */
+			--foreground: #1c1a22; /* ink */
+
+			--surface: #ffffff;
+			--surface-foreground: var(--foreground);
+			--surface-secondary: #f2ede5;
+			--surface-secondary-foreground: var(--foreground);
+			--surface-tertiary: #eae3d9;
+			--surface-tertiary-foreground: var(--foreground);
+
+			--overlay: #ffffff;
+			--overlay-foreground: var(--foreground);
+
+			--muted: #837d89;
+
+			--default: #f0ebe3;
+			--default-foreground: var(--foreground);
+
+			--accent: #ec4863; /* refined coral */
+			--accent-foreground: #ffffff;
+
+			--field-background: #ffffff;
+			--field-foreground: var(--foreground);
+			--field-placeholder: var(--muted);
+
+			--danger: #e5484d;
+			--danger-foreground: #ffffff;
+
+			--border: #ece6dc;
+			--separator: #ded6ca;
+		}
+
+		@variant dark {
+			--background: #141118; /* ink plum-black */
+			--foreground: #f4efe7; /* warm off-white */
+
+			--surface: #1d1a23;
+			--surface-foreground: var(--foreground);
+			--surface-secondary: #262230;
+			--surface-secondary-foreground: var(--foreground);
+			--surface-tertiary: #2e2a38;
+			--surface-tertiary-foreground: var(--foreground);
+
+			--overlay: #1d1a23;
+			--overlay-foreground: var(--foreground);
+
+			--muted: #9c94a3;
+
+			--default: #262230;
+			--default-foreground: var(--foreground);
+
+			--accent: #f0576f;
+			--accent-foreground: #ffffff;
+
+			--field-background: #1d1a23;
+			--field-foreground: var(--foreground);
+			--field-placeholder: var(--muted);
+
+			--danger: #ff6369;
+			--danger-foreground: #ffffff;
+
+			--border: #2c2733;
+			--separator: #3a3443;
+		}
+	}
+}
